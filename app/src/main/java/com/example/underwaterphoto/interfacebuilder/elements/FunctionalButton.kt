@@ -1,23 +1,24 @@
-package com.example.underwaterphoto.interfacebuilder
+package com.example.underwaterphoto.interfacebuilder.elements
 
 import android.app.Activity
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.MotionEvent
+import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.Spinner
 import androidx.appcompat.app.AlertDialog
-import androidx.constraintlayout.widget.ConstraintLayout
 
 import com.example.underwaterphoto.EasyCamera
 import com.example.underwaterphoto.R
+import com.example.underwaterphoto.interfacebuilder.InterfaceElement
 
 
-open class ConstructedButton @JvmOverloads constructor(
+open class FunctionalButton @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0) : InterfaceElement(context, attrs, defStyleAttr) {
@@ -74,7 +75,7 @@ open class ConstructedButton @JvmOverloads constructor(
     }
 
     override fun getElementName(): String {
-        return ConstructedButton.elementName
+        return elementName
     }
 
     override fun enableDesignMode() {
@@ -174,64 +175,84 @@ open class ConstructedButton @JvmOverloads constructor(
         }
 
         setOnDoubleTapListener{
-            val dialogView = LayoutInflater.from(context).inflate(R.layout.button_menu, null)
-            val dialog = AlertDialog.Builder(context)
-                .setView(dialogView)
-                .create()
-
-            val spinner1: Spinner = dialogView.findViewById(R.id.click_action)
-            val spinner2: Spinner = dialogView.findViewById(R.id.hold_action)
-            val spinner3: Spinner = dialogView.findViewById(R.id.press_action)
-            val spinner4: Spinner = dialogView.findViewById(R.id.release_action)
-            val applyButton : Button = dialogView.findViewById(R.id.apply_button)
-            val cancelButton : Button = dialogView.findViewById(R.id.cancel_button)
-            val deleteButton : ImageButton = dialogView.findViewById(R.id.trash_button)
-
-            val adapter = ArrayAdapter.createFromResource(
-                context,
-                R.array.spinner_items,
-                android.R.layout.simple_spinner_item
-            )
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-
-            spinner1.adapter = adapter
-            spinner2.adapter = adapter
-            spinner3.adapter = adapter
-            spinner4.adapter = adapter
-
-            spinner1.setSelection((clickHandlerAction?.ordinal ?: -1) + 1)
-            spinner2.setSelection((holdHandlerAction?.ordinal ?: -1) + 1)
-            spinner3.setSelection((pressHandlerAction?.ordinal ?: -1) + 1)
-            spinner4.setSelection((releaseHandlerAction?.ordinal ?: -1) + 1)
-
-            applyButton.setOnClickListener {
-                val actionList = HandlerActions.entries.toList()
-                var selectedPosition = spinner1.selectedItemPosition
-                clickHandlerAction = if(selectedPosition > 0) actionList[selectedPosition - 1] else null
-                selectedPosition = spinner2.selectedItemPosition
-                holdHandlerAction = if(selectedPosition > 0) actionList[selectedPosition - 1] else null
-                selectedPosition = spinner3.selectedItemPosition
-                pressHandlerAction = if(selectedPosition > 0) actionList[selectedPosition - 1] else null
-                selectedPosition = spinner4.selectedItemPosition
-                releaseHandlerAction = if(selectedPosition > 0) actionList[selectedPosition - 1] else null
-
-                dialog.dismiss()
-            }
-            cancelButton.setOnClickListener {
-                dialog.dismiss()
-            }
-            deleteButton.setOnClickListener {
-                val parentView = parent as? ViewGroup
-                parentView?.removeView(this)
-
-                mustBeDeleted = true
-
-                dialog.dismiss()
-            }
-
-            dialog.show()
+            showButtonSettings()
         }
     }
+
+    private fun showButtonSettings(){
+        val dialogView = getDialogView()
+        setupWidgets(dialogView)
+
+        val dialog = AlertDialog.Builder(context)
+            .setView(dialogView)
+            .create()
+
+        val applyButton : Button = dialogView.findViewById(R.id.apply_button)
+        val cancelButton : Button = dialogView.findViewById(R.id.cancel_button)
+        val deleteButton : ImageButton = dialogView.findViewById(R.id.trash_button)
+
+        applyButton.setOnClickListener {
+            onApplyButtonClick(dialogView)
+            dialog.dismiss()
+        }
+        cancelButton.setOnClickListener {
+            dialog.dismiss()
+        }
+        deleteButton.setOnClickListener {
+            val parentView = parent as? ViewGroup
+            parentView?.removeView(this)
+
+            mustBeDeleted = true
+
+            dialog.dismiss()
+        }
+
+        dialog.show()
+    }
+
+    protected open fun getDialogView() : View {
+        return LayoutInflater.from(context).inflate(R.layout.button_menu, null)
+    }
+    protected open fun setupWidgets(dialogView : View){
+        val spinner1: Spinner = dialogView.findViewById(R.id.click_action)
+        val spinner2: Spinner = dialogView.findViewById(R.id.hold_action)
+        val spinner3: Spinner = dialogView.findViewById(R.id.press_action)
+        val spinner4: Spinner = dialogView.findViewById(R.id.release_action)
+
+        val adapter = ArrayAdapter.createFromResource(
+            context,
+            R.array.spinner_items,
+            android.R.layout.simple_spinner_item
+        )
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+
+        spinner1.adapter = adapter
+        spinner2.adapter = adapter
+        spinner3.adapter = adapter
+        spinner4.adapter = adapter
+
+        spinner1.setSelection((clickHandlerAction?.ordinal ?: -1) + 1)
+        spinner2.setSelection((holdHandlerAction?.ordinal ?: -1) + 1)
+        spinner3.setSelection((pressHandlerAction?.ordinal ?: -1) + 1)
+        spinner4.setSelection((releaseHandlerAction?.ordinal ?: -1) + 1)
+    }
+    protected open fun onApplyButtonClick(dialog: View){
+        val spinner1: Spinner = dialog.findViewById(R.id.click_action)
+        val spinner2: Spinner = dialog.findViewById(R.id.hold_action)
+        val spinner3: Spinner = dialog.findViewById(R.id.press_action)
+        val spinner4: Spinner = dialog.findViewById(R.id.release_action)
+
+        val actionList = HandlerActions.entries.toList()
+        var selectedPosition = spinner1.selectedItemPosition
+        clickHandlerAction = if(selectedPosition > 0) actionList[selectedPosition - 1] else null
+        selectedPosition = spinner2.selectedItemPosition
+        holdHandlerAction = if(selectedPosition > 0) actionList[selectedPosition - 1] else null
+        selectedPosition = spinner3.selectedItemPosition
+        pressHandlerAction = if(selectedPosition > 0) actionList[selectedPosition - 1] else null
+        selectedPosition = spinner4.selectedItemPosition
+        releaseHandlerAction = if(selectedPosition > 0) actionList[selectedPosition - 1] else null
+    }
+
     
     private fun clearListeners(){
         setOnClickListener(null)
@@ -256,7 +277,7 @@ open class ConstructedButton @JvmOverloads constructor(
             TAKE_PHOTO,
             CLOSE_APP
         }
-        const val elementName = "constructed_button"
+        const val elementName = "functional_button"
         private const val DOUBLE_CLICK_THRESHOLD = 300 // Миллисекунды
     }
 

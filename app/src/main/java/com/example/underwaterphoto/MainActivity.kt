@@ -5,24 +5,16 @@ import android.annotation.SuppressLint
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
-import android.view.ViewGroup
 import android.widget.ImageButton
 import androidx.core.content.ContextCompat
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.PopupMenu
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.example.underwaterphoto.databinding.ActivityMainBinding
-import com.example.underwaterphoto.interfacebuilder.ConstructedButton
 import com.example.underwaterphoto.interfacebuilder.InterfaceBuilder
-import com.example.underwaterphoto.interfacebuilder.elements.PhotoButton
 
 
 //typealias LumaListener = (luma: Double) -> Unit

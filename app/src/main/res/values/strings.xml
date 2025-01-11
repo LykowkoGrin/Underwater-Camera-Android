@@ -8,11 +8,12 @@
     <string name="hold_action">Действия при удерживании</string>
     <string name="press_action">Действия при нажатии</string>
     <string name="release_action">Действия при отпускании</string>
-
+    <string name="choose_color">Цвет кнопки:</string>
     <string name="apply_button">Принять</string>
     <string name="cancel_button">Отмена</string>
-    <string name="add_element_button">Добавить элемент</string>
 
+
+    <string name="add_element_button">Добавить элемент</string>
     <string name="create_round_button">Круглая кнопка</string>
     <string name="create_left_button">Кнопка домика</string>
 

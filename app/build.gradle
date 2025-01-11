@@ -72,6 +72,7 @@ dependencies {
     debugImplementation libs.androidx.ui.test.manifest
 
     implementation 'com.google.code.gson:gson:2.8.8'
+    implementation "com.github.skydoves:colorpickerview:2.2.4"
 
     def camerax_version = "1.2.2"
     implementation "androidx.camera:camera-core:${camerax_version}"

@@ -6,13 +6,12 @@ import android.view.LayoutInflater
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.example.underwaterphoto.EasyCamera
-import com.example.underwaterphoto.interfacebuilder.ConstructedButton
 
 import com.example.underwaterphoto.R
 
 class PhotoButton @JvmOverloads constructor(context: Context,
                   attrs: AttributeSet? = null,
-                  defStyleAttr: Int = 0) : ConstructedButton(context, attrs, defStyleAttr) {
+                  defStyleAttr: Int = 0) : ColoredButton(context, attrs, defStyleAttr) {
 
     override fun getElementName() : String {
         return PhotoButton.elementName
