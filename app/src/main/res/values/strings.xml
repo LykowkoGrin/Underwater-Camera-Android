@@ -1,0 +1,26 @@
+<resources>
+    <string name="app_name">Underwater Photo</string>
+    <string name="capture_button">Capture photo or video</string>
+    <string name="builder_mode">Edit Interface</string>
+    <string name="delete_button">Удалить</string>
+
+    <string name="click_action">Действия при клике</string>
+    <string name="hold_action">Действия при удерживании</string>
+    <string name="press_action">Действия при нажатии</string>
+    <string name="release_action">Действия при отпускании</string>
+
+    <string name="apply_button">Принять</string>
+    <string name="cancel_button">Отмена</string>
+    <string name="add_element_button">Добавить элемент</string>
+
+    <string name="create_round_button">Круглая кнопка</string>
+    <string name="create_left_button">Кнопка домика</string>
+
+    <string-array name="spinner_items">
+        <item>Ничего</item>
+        <item>Начать запись</item>
+        <item>Остановить запись</item>
+        <item>Сделать фото</item>
+        <item>Выйти</item>
+    </string-array>
+</resources>

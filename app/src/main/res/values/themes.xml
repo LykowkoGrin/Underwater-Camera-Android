@@ -1,0 +1,4 @@
+<resources>
+    <style name="Theme.UnderwaterPhoto" parent="Theme.AppCompat.Light.NoActionBar">
+    </style>
+</resources>
