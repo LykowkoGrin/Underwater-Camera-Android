@@ -15,6 +15,9 @@ import androidx.appcompat.widget.PopupMenu
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.example.underwaterphoto.databinding.ActivityMainBinding
 import com.example.underwaterphoto.interfacebuilder.InterfaceBuilder
+import com.example.underwaterphoto.interfacebuilder.elements.HomeButton
+import com.example.underwaterphoto.interfacebuilder.elements.IndicatorButton
+import com.example.underwaterphoto.interfacebuilder.elements.PhotoButton
 
 
 //typealias LumaListener = (luma: Double) -> Unit
@@ -25,7 +28,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var easyCamera: EasyCamera
     private lateinit var builder : InterfaceBuilder
 
-    @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewBinding = ActivityMainBinding.inflate(layoutInflater)
@@ -115,11 +117,15 @@ class MainActivity : AppCompatActivity() {
         popupMenu.setOnMenuItemClickListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.create_round_button -> {
-                    builder.addElement("photo_button")?.let { drawElement(it) }
+                    builder.addElement(PhotoButton.elementName)?.let { drawElement(it) }
                     true
                 }
                 R.id.create_left_button -> {
-                    builder.addElement("home_button")?.let { drawElement(it) }
+                    builder.addElement(HomeButton.elementName)?.let { drawElement(it) }
+                    true
+                }
+                R.id.create_indicator -> {
+                    builder.addElement(IndicatorButton.elementName)?.let { drawElement(it) }
                     true
                 }
                 else -> false
@@ -135,7 +141,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     companion object {
-        private const val TAG = "CameraXApp"
+        private const val TAG = "UnwaterCamera"
         private val REQUIRED_PERMISSIONS =
             mutableListOf (
                 Manifest.permission.CAMERA,

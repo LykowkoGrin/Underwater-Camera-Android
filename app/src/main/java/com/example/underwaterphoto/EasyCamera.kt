@@ -39,9 +39,6 @@ import java.nio.ByteBuffer
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-interface EasyCameraListener {
-    fun onVideoStatusChanged(isVideoStarted: Boolean)
-}
 
 class EasyCamera(private val viewBinding: ActivityMainBinding,private val appActivity: AppCompatActivity) {
 
@@ -54,18 +51,25 @@ class EasyCamera(private val viewBinding: ActivityMainBinding,private val appAct
 
     private lateinit var cameraExecutor: ExecutorService
 
-    private var videoStatusListener: EasyCameraListener? = null
+    private var videoStatusListeners = mutableSetOf<(isVideoRecording: Boolean) -> Unit>()
 
     var isVideoRecording : Boolean = false
         private set
 
-    init{
-        cameraExecutor = Executors.newSingleThreadExecutor()
-        startCamera()
+    fun addVideoStatusListener(videoStatusListener : (isVideoRecording: Boolean) -> Unit){
+        videoStatusListeners.add( videoStatusListener )
+    }
+    fun removeVideoStatusListener(videoStatusListener : (isVideoRecording: Boolean) -> Unit){
+        videoStatusListeners.remove( videoStatusListener )
     }
 
-    fun setVideoStatusListener(listener: EasyCameraListener) {
-        videoStatusListener = listener
+    init{
+        videoStatusListeners.add { isVideoRecording ->
+            this.isVideoRecording = isVideoRecording
+        }
+
+        cameraExecutor = Executors.newSingleThreadExecutor()
+        startCamera()
     }
 
     private fun startCamera() {
@@ -202,8 +206,7 @@ class EasyCamera(private val viewBinding: ActivityMainBinding,private val appAct
     private fun handleVideoEvent(recordEvent: VideoRecordEvent) {
         when (recordEvent) {
             is VideoRecordEvent.Start -> {
-                videoStatusListener?.onVideoStatusChanged(true)
-                isVideoRecording= true
+                videoStatusListeners.forEach { it(true) }
                 Log.d(EasyCamera.TAG, "Video recording started.")
             }
             is VideoRecordEvent.Finalize -> {
@@ -218,8 +221,7 @@ class EasyCamera(private val viewBinding: ActivityMainBinding,private val appAct
                         "Video capture ends with error: ${recordEvent.error}"
                     )
                 }
-                videoStatusListener?.onVideoStatusChanged(false)
-                isVideoRecording = false
+                videoStatusListeners.forEach { it(false) }
             }
         }
     }

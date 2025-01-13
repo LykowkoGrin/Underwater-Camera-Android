@@ -6,4 +6,7 @@
     <item
         android:id="@+id/create_left_button"
         android:title="@string/create_left_button" />
+    <item
+        android:id="@+id/create_indicator"
+        android:title="@string/create_indicator" />
 </menu>

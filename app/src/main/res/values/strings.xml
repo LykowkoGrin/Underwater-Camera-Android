@@ -16,6 +16,7 @@
     <string name="add_element_button">Добавить элемент</string>
     <string name="create_round_button">Круглая кнопка</string>
     <string name="create_left_button">Кнопка домика</string>
+    <string name="create_indicator">Индикатор записи</string>
 
     <string-array name="spinner_items">
         <item>Ничего</item>

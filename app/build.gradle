@@ -20,15 +20,26 @@ android {
         }
     }
 
+    signingConfigs {
+        release {
+            storeFile file('C:\\Users\\lykow\\Desktop\\keys.jks')
+            storePassword '369158'
+            keyAlias 'leonov_key'
+            keyPassword '369158'
+        }
+    }
+
     buildTypes {
         customDebugType {
             debuggable true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
-        //release {
-        //    minifyEnabled false
-         //   proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-        //}
+        release {
+            signingConfig signingConfigs.release
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -40,6 +51,7 @@ android {
     buildFeatures {
         compose true
         viewBinding true
+
     }
     composeOptions {
         kotlinCompilerExtensionVersion '1.5.1'
@@ -71,7 +83,7 @@ dependencies {
     debugImplementation libs.androidx.ui.tooling
     debugImplementation libs.androidx.ui.test.manifest
 
-    implementation 'com.google.code.gson:gson:2.8.8'
+    implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.0"
     implementation "com.github.skydoves:colorpickerview:2.2.4"
 
     def camerax_version = "1.2.2"

@@ -37,7 +37,7 @@ open class FunctionalButton @JvmOverloads constructor(
     private var isHeld : Boolean = false
     private var isPressed : Boolean = false
 
-    var easyCamera: EasyCamera? = null
+    open var easyCamera: EasyCamera? = null
 
     override var mustBeDeleted: Boolean = false
 
@@ -180,7 +180,7 @@ open class FunctionalButton @JvmOverloads constructor(
     }
 
     private fun showButtonSettings(){
-        val dialogView = getDialogView()
+        val dialogView = getDialogView() ?: return
         setupWidgets(dialogView)
 
         val dialog = AlertDialog.Builder(context)
@@ -210,7 +210,7 @@ open class FunctionalButton @JvmOverloads constructor(
         dialog.show()
     }
 
-    protected open fun getDialogView() : View {
+    protected open fun getDialogView() : View? {
         return LayoutInflater.from(context).inflate(R.layout.button_menu, null)
     }
     protected open fun setupWidgets(dialogView : View){

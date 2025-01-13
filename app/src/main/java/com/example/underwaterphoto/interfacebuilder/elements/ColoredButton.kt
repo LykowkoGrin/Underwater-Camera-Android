@@ -41,8 +41,8 @@ open class ColoredButton @JvmOverloads constructor(
         backgroundTintList = ColorStateList.valueOf(colorInt)
     }
 
-    override fun getDialogView(): View {
-        return LayoutInflater.from(context).inflate(R.layout.button_menu, null)
+    override fun getDialogView(): View? {
+        return LayoutInflater.from(context).inflate(R.layout.button_menu_with_color, null)
     }
 
     override fun onApplyButtonClick(dialog : View){
@@ -53,6 +53,15 @@ open class ColoredButton @JvmOverloads constructor(
         val validHexColor = if (hexColor.length == 8) "#$hexColor" else "#FFFFFFFF"
 
         backgroundTintList = ColorStateList.valueOf(Color.parseColor(validHexColor))
+    }
+
+    override fun setupWidgets(dialogView: View) {
+        super.setupWidgets(dialogView)
+        val colorPicker = dialogView.findViewById<ColorPickerView>(R.id.color_picker_view)
+
+        val color = (backgroundTintList?.defaultColor) ?: Color.WHITE
+
+        colorPicker.setInitialColor(color)
     }
 
     //override fun

@@ -3,18 +3,25 @@ package com.example.underwaterphoto.interfacebuilder
 import com.example.underwaterphoto.EasyCamera
 
 import android.content.Context
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.example.underwaterphoto.interfacebuilder.elements.HomeButton
+import com.example.underwaterphoto.interfacebuilder.elements.IndicatorButton
 import com.example.underwaterphoto.interfacebuilder.elements.PhotoButton
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
+import kotlinx.serialization.builtins.MapSerializer
+import kotlinx.serialization.builtins.serializer
+import kotlinx.serialization.json.Json
+//import com.google.gson.Gson
+//import com.google.gson.reflect.TypeToken
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.io.IOException
 import java.nio.charset.StandardCharsets
+
+import kotlinx.serialization.decodeFromString
 
 
 class InterfaceBuilder(private val context: Context, private val easyCamera: EasyCamera){
@@ -47,30 +54,30 @@ class InterfaceBuilder(private val context: Context, private val easyCamera: Eas
     }
 
     private fun loadJsonData(): MutableMap<String, MutableMap<String, String>>? {
-        val gson = Gson()
 
-        try {
-            val file = File(context.filesDir, FILE_NAME)
-            if (file.exists()) {
-                val fileInputStream = FileInputStream(file)
-                val json = fileInputStream.bufferedReader(StandardCharsets.UTF_8).use { it.readText() }
+        val file = File(context.filesDir, FILE_NAME)
 
-                val type = object : TypeToken<MutableMap<String, MutableMap<String, String>>>() {}.type
+        if (file.exists()) {
+            val json = file.readText(StandardCharsets.UTF_8)
 
-                val resultMap: MutableMap<String, MutableMap<String, String>>? = gson.fromJson(json, type)
-                return resultMap
-            }
-        } catch (e: IOException) {
-            e.printStackTrace()
+            val resultMap: MutableMap<String, MutableMap<String, String>> = Json.decodeFromString(json)
+
+            return resultMap
+        } else {
+            Log.d("FileCheck", "File does not exist.")
         }
 
+
+        Log.d("Result", "Returning null as result.")
         return null
     }
+
 
     private fun createElementByName(name : String) : InterfaceElement? {
         val element : InterfaceElement? = when(name){
             PhotoButton.elementName -> PhotoButton.createButton(context,easyCamera)
             HomeButton.elementName -> HomeButton.createButton(context,easyCamera)
+            IndicatorButton.elementName -> IndicatorButton.createButton(context,easyCamera)
             else -> null
         }
 
@@ -108,8 +115,7 @@ class InterfaceBuilder(private val context: Context, private val easyCamera: Eas
         return viewsList
     }
 
-    fun saveData(){
-        val gson = Gson()
+    fun saveData() {
         val resultMap = mutableMapOf<String, MutableMap<String, String>>()
 
         elements.forEachIndexed { index, element ->
@@ -120,17 +126,19 @@ class InterfaceBuilder(private val context: Context, private val easyCamera: Eas
             resultMap[numberedName] = elementMap
         }
 
-        val json = gson.toJson(resultMap)
-
         try {
-            val file = File(context.filesDir, FILE_NAME)
-            FileOutputStream(file).use { fos ->
-                fos.write(json.toByteArray())
-            }
-        } catch (e: IOException) {
-            e.printStackTrace()
-        }
+            val mapSerializer = MapSerializer(
+                String.serializer(),
+                MapSerializer(String.serializer(), String.serializer())
+            )
+            val json = Json.encodeToString(mapSerializer, resultMap)
 
+            val file = File(context.filesDir, FILE_NAME)
+
+            file.writeText(json)
+        } catch (e: IOException) {
+            Log.e("SaveError", "Failed to save file: ${e.message}")
+        }
     }
 
     companion object{
